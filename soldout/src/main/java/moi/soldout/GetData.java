@@ -7,25 +7,23 @@ import java.util.regex.Matcher;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 
 /**
  * 取得した情報を整形し、出力します。
- * @version 0.0.1 
+ * @version 0.0.2 
  */
 public class GetData {
-	private static long sleepTime = 1000;
-	public static void main(String[] args) throws InterruptedException, TwitterException {
+	private static long sleepTime = 1000 * 60 * 60;
+	public static void main(String[] args) throws InterruptedException {
 		long num = 1;
 		long population;
 		while (true) {
 			Date date = new Date();
 			population = getPopulation();
-			// ツイート
-			Twitter twitter = TwitterFactory.getSingleton();
-			twitter.updateStatus("人口:" + population);
+			if (0 < population) {
+				tweet("人口:" + population);
+			}
 			// コンソール出力
 			long processTime = new Date().getTime() - date.getTime();
 			StringBuffer sb = new StringBuffer();
@@ -67,5 +65,21 @@ public class GetData {
 			population = Integer.valueOf(match.group().substring(3));
 		}
 		return population;
+	}
+	
+	/** 
+	 * ツイートをします。(twitter4j.properties 設定を読み込み)
+	 * @param tweetStr ツイート文字列
+	 * @since 0.0.2
+	 * @version 0.0.2 
+	 */
+	private static void tweet(String tweetStr) {
+		Twitter twitter = TwitterFactory.getSingleton();
+		try {
+			// ツイート内容
+			twitter.updateStatus(tweetStr);
+		} catch (TwitterException e) {
+			System.err.println(e.getErrorMessage());
+		}
 	}
 }
