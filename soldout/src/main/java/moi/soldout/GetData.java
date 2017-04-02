@@ -11,16 +11,15 @@ import twitter4j.*;
 
 /**
  * 取得した情報を整形し、出力します。
- * @version 0.0.2 
+ * @version 0.0.3 
  */
-public class GetData {
-	private static long sleepTime = 1000 * 60 * 60;
+public class GetData implements GetDataIF {
 	public static void main(String[] args) throws InterruptedException {
 		long num = 1;
 		long population;
 		while (true) {
 			Date date = new Date();
-			population = getPopulation();
+			population = getPopulation(3);
 			if (0 < population) {
 				tweet("人口:" + population);
 			}
@@ -36,9 +35,8 @@ public class GetData {
 			sb.append(processTime);
 			sb.append("ms");
 			System.out.println(sb.toString());
-			if (sleepTime > processTime) {
-				Thread.sleep(sleepTime - processTime);
-			}
+			long intervalTime = SLEEP_TIME > processTime ? SLEEP_TIME - processTime : 0;
+			Thread.sleep(intervalTime);
 		}
 	}
 	
@@ -46,12 +44,12 @@ public class GetData {
 	 * 人口を取得します。
 	 * @return 人口
 	 * @since 0.0.1
-	 * @version 0.0.1 
+	 * @version 0.0.3 
 	 */
 	private static int getPopulation() {
 		String urlRank = "http://aqualiss.xyz/soldout/ranking.cgi";
 		Document document = null;
-		int population = -1;
+		int population = FAILT_POPULATION;
 		try {
 			document = Jsoup.connect(urlRank).get();
 		} catch (Exception e) {
@@ -64,6 +62,25 @@ public class GetData {
 		if (match.find()) {
 			population = Integer.valueOf(match.group().substring(3));
 		}
+		return population;
+	}
+	
+	/**
+	 * 人口を取得します。
+	 * @return 人口
+	 * @since 0.0.3
+	 * @version 0.0.3 
+	 */
+	private static int getPopulation(int retryCount) {
+		int population = getPopulation();
+		for (int retry = 0; retry < FAILT_POPULATION; retry++) {
+			if (0 < population) {
+				getPopulation();
+			} else {
+				break;
+			}
+		}
+		
 		return population;
 	}
 	
