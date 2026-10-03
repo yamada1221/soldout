@@ -1,0 +1,4 @@
+oauth.consumerKey=replace-with-consumer-key
+oauth.consumerSecret=replace-with-consumer-secret
+oauth.accessToken=replace-with-access-token
+oauth.accessTokenSecret=replace-with-access-token-secret

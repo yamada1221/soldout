@@ -73,12 +73,8 @@ public class GetData implements GetDataIF {
 	 */
 	private static int getPopulation(int retryCount) {
 		int population = getPopulation();
-		for (int retry = 0; retry < FAILT_POPULATION; retry++) {
-			if (0 < population) {
-				getPopulation();
-			} else {
-				break;
-			}
+		for (int retry = 0; population == FAILT_POPULATION && retry < retryCount; retry++) {
+			population = getPopulation();
 		}
 		
 		return population;
