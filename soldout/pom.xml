@@ -12,7 +12,17 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>8</maven.compiler.release>
   </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -20,7 +30,7 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 	<dependency>
     	<groupId>org.jsoup</groupId>
